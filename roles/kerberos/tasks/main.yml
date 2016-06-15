@@ -1,0 +1,68 @@
+---
+- name: Update packages
+  apt: update_cache=yes
+
+- name: install packages
+  apt: name={{ item }} state=present
+  with_items:
+    - libpam-ldap
+    - libpam-krb5
+    - libnss-ldap
+    - nfs-client
+    - krb5-user
+    - wget
+
+- name: create cert folder
+  file: path=/usr/share/ca-certificates/cosi state=directory
+
+- name: download cert
+  get_url: url=https://talos.cslabs.clarkson.edu/cosi_ca.crt dest=/usr/share/ca-certificates/cosi/cosi_ca.crt validate_certs=no
+
+- name: modify certs conf
+  blockinfile:
+    dest: /etc/ca-certificates.conf
+    block: |
+      cosi/cosi_ca.crt
+
+- name: update ca-certificates
+  command: update-ca-certificates
+
+- name: copy files to /etc
+  copy: src={{ item }} dest=/etc/
+  with_items:
+    - nsswitch.conf
+    - libnss-ldap.conf
+    - sudoers
+    - krb5.conf
+    - pam_ldap.conf
+
+- name: reload nscd
+  command: nscd -i passwd
+
+- name: copy pam files
+  copy: src={{ item }} dest=/etc/pam.d/
+  with_items:
+    - common-password
+    - common-auth
+    - common-session
+
+- name: create folder for pam_echoes
+  file: path=/etc/pam_echoes state=directory
+
+- name: copy krb_sess_fail
+  copy: src=krb_sess_fail dest=/etc/pam_echoes/
+
+- name: create principal
+  command: kadmin -p {{ username }}/admin -w {{ krb_admin_passwd }} -q "addprinc -randkey host/{{ computer_name }}.cslabs.clarkson.edu"
+
+- name: add principal to machine
+  command: kadmin -p {{ username }}/admin -w {{ krb_admin_passwd }} -q "ktadd host/{{ computer_name }}.cslabs.clarkson.edu"
+
+- name: update fstab
+  blockinfile:
+    dest: /etc/fstab
+    block: |
+      metapod.cslabs.clarkson.edu:/storage/  /mnt  nfs  vers=3,sec=krb5i,nolock  0  0
+
+- name: run rpc.gssd
+  command: rpc.gssd

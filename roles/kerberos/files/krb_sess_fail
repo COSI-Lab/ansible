@@ -1,0 +1,1 @@
+Unable to initialize Kerberos credentials; some services (like NFS) may not work. Please use `kpasswd` or contact a maintainer, then either log in again or use `kinit`.

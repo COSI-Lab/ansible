@@ -1,0 +1,15 @@
+---
+- name: Set up Kerberos on a debian machine
+  user: ansible
+
+  vars_prompt:
+  - name: "username"
+    prompt: "Enter username of /admin user (ex: lannonbr/admin -> lannonbr)"
+  - name: "krb_admin_passwd"
+    prompt: "Enter admin krb passwd"
+    private: yes
+  - name: "computer_name"
+    prompt: "Enter the name for the machine"
+
+  roles:
+    - kerberos
