@@ -1,0 +1,28 @@
+- name: siem-agent-apt
+  hosts: siem-agent-hosts
+  become: true
+  become_user: root
+  tasks:
+    - name: Import SIEM GPG key
+      ansible.builtin.get_url:
+        url: https://packages.wazuh.com/key/GPG-KEY-WAZUH
+        dest: /etc/apt/trusted.gpg.d/wazuh.gpg
+
+    - name: Set up SIEM apt repository
+      ansible.builtin.apt_repository:
+        repo: "deb [signed-by=/usr/share/keyrings/wazuh.gpg] https://packages.wazuh.com/4.x/apt/ stable main"
+        state: present
+
+    - name: Install SIEM agent
+      ansible.builtin.apt:
+        name: "wazuh-agent"
+        state: latest
+        update_cache: yes
+      environment:
+        WAZUH_MANAGER: "siem.cosi.clarkson.edu"
+    
+    - name: Run SIEM agent
+      ansible.builtin.systemd_service:
+        state: started
+        daemon_reload: true
+        name: wazuh-agent

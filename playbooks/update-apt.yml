@@ -1,0 +1,16 @@
+- name: update-apt
+  hosts: ubuntu-servers, debian-servers
+  become: true
+  become_user: root
+  tasks:
+    - name: update
+      ansible.builtin.apt:
+        update_cache: yes
+    - name: upgrade
+      ansible.builtin.apt:
+        name: "*"
+        state: latest
+    - name: cleanup
+      ansible.builtin.apt:
+        autoremove: yes
+        clean: yes
