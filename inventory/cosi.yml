@@ -1,0 +1,49 @@
+
+# Lab machines
+
+cosi-fleet:
+  hosts:
+    cosi-[01-08].cosi.clarkson.edu: {}
+
+# // Lab machines
+
+# Platforms
+
+ubuntu-servers:
+  hosts:
+    hydra.cosi.clarkson.edu: {}
+    janet.cosi.clarkson.edu: {}
+    kasper.cosi.clarkson.edu: {}
+    mirror.clarkson.edu: {}
+    tiamat.cosi.clarkson.edu: {}
+    vpn.cosi.clarkson.edu: {}
+
+debian-servers:
+  hosts:
+    caterpillar.cosi.clarkson.edu: {}
+    taltres.cosi.clarkson.edu: {}
+
+proxmox-servers:
+  hosts:
+    gromit.cosi.clarkson.edu: {}
+    wallace.cosi.clarkson.edu: {}
+
+# // Platforms
+
+# Services
+
+docker-hosts:
+  hosts:
+    tiamat.cosi.clarkson.edu: {}
+
+libvirt-hosts:
+  hosts:
+    hydra.cosi.clarkson.edu: {}
+    janet.cosi.clarkson.edu: {}
+
+siem-agent-hosts:
+  children:
+    ubuntu-servers: {}
+    debian-servers: {}
+
+# // Services

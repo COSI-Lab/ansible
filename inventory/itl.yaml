@@ -1,0 +1,7 @@
+# Lab machines
+
+itl-fleet:
+  hosts:
+    itl-[00-25].cslabs.clarkson.edu: {}
+
+# // Lab machines
