@@ -19,7 +19,7 @@
         state: latest
         update_cache: yes
       environment:
-        WAZUH_MANAGER: "siem.cosi.clarkson.edu"
+        WAZUH_MANAGER: "koma.cosi.clarkson.edu"
     
     - name: Run SIEM agent
       ansible.builtin.systemd_service:
