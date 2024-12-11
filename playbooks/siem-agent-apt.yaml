@@ -1,12 +1,24 @@
-- name: siem-agent-apt
-  hosts: siem-agent-hosts
+- name: siem_agent_apt
+  hosts: siem_agent_hosts
   become: true
   become_user: root
   tasks:
-    - name: Import SIEM GPG key
-      ansible.builtin.get_url:
-        url: https://packages.wazuh.com/key/GPG-KEY-WAZUH
-        dest: /etc/apt/trusted.gpg.d/wazuh.gpg
+    - name: Ensure curl installed
+      ansible.builtin.apt:
+        name: "curl"
+        state: present
+    
+    - name: Ensure gpg installed
+      ansible.builtin.apt:
+        name: "gpg"
+        state: present
+    
+    # - name: Remove old apt key
+    #   ansible.builtin.shell: "rm -f /usr/share/keyrings/wazuh.gpg"
+
+    - name: Fetch SIEM GPG key
+      ansible.builtin.shell: "curl -s https://packages.wazuh.com/key/GPG-KEY-WAZUH | gpg --no-default-keyring --keyring gnupg-ring:/usr/share/keyrings/wazuh.gpg --import && chmod 644 /usr/share/keyrings/wazuh.gpg"
+        creates: /usr/share/keyrings/wazuh.gpg
 
     - name: Set up SIEM apt repository
       ansible.builtin.apt_repository:
