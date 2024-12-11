@@ -14,7 +14,7 @@ ubuntu-servers:
     hydra.cosi.clarkson.edu: {}
     janet.cosi.clarkson.edu: {}
     kasper.cosi.clarkson.edu: {}
-    mirror.clarkson.edu: {}
+    mirror.cosi.clarkson.edu: {}
     tiamat.cosi.clarkson.edu: {}
     vpn.cosi.clarkson.edu: {}
 
@@ -42,8 +42,16 @@ libvirt-hosts:
     janet.cosi.clarkson.edu: {}
 
 siem-agent-hosts:
-  children:
-    ubuntu-servers: {}
-    debian-servers: {}
+  hosts:
+    hydra.cosi.clarkson.edu: {}
+    janet.cosi.clarkson.edu: {}
+    kasper.cosi.clarkson.edu: {}
+    tiamat.cosi.clarkson.edu: {}
+    vpn.cosi.clarkson.edu: {}
+    caterpillar.cosi.clarkson.edu: {}
+    taltres.cosi.clarkson.edu: {}
+  # children:
+  #   ubuntu-servers: {}
+  #   debian-servers: {}
 
 # // Services
